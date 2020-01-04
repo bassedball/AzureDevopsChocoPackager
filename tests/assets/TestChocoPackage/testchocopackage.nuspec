@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+  <id>testchocopackage</id>
+    <version>1.0.0</version>
+    <title>TestChocoPackage (Install)</title>
+    <authors>Edwin siebes</authors>
+    <tags>testchocopackage, AzureDevopsChocoPackager</tags>
+    <summary> This package is used for testing diverse Azure AzureDevopsChocoPackager functions</summary>
+    <description>This package is used for testing diverse Azure AzureDevopsChocoPackager functions</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
