@@ -1,4 +1,4 @@
-Import-Module $PSScriptRoot\..\source\modules\ChocolateyFunctions.psm1 -Force -Verbose
+Import-Module $PSScriptRoot\..\source\modules\ChocolateyFunctions.psm1 -Force
 Describe "Chocolatey instance testing" {
     InModuleScope ChocolateyFunctions {
         Context "Local Choco Command not found." {
@@ -108,23 +108,6 @@ Describe "Chocolatey instance testing" {
             It "Get-command Should be called twice" {
                 Assert-MockCalled Get-Command 2
             }
-        }
-    }
-}
-
-Describe "Chocolatey pack testing" {
-    $nuspecFileLocation = "$PSScriptRoot\assets\TestChocoPackage"
-    $OutDir = "out" 
-    Setup -Dir $OutDir 
-    $OutDirPath = "Testdrive:\$OutDir"
-
-    Context "Pack testchocopackage" {
-        it "Invoke Chocopack should not throw error" {
-             { Invoke-ChocoPack -NuSpecFilePath $nuspecFileLocation -OutputFolderPath $OutDirPath -UseBuildinChoco } | 
-             Should not Throw
-        }
-        it "Chocopackage should exist" { 
-            Test-Path "$OutDirPath\testchocopackage.1.0.0.nupkg" 
         }
     }
 }

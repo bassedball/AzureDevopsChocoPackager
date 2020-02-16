@@ -1,3 +1,5 @@
+Import-Module $PSScriptRoot\ChocoHelperFunctions.psm1 -Force
+
 <#
 .Synopsis
    Wrapper for getting local chocolatey installed version 
@@ -51,6 +53,20 @@ function Get-ChocolateyInstance
     return $chocoExe
 
 }
+function Invoke-Chocolatey 
+{
+    param(
+    [Parameter(Position=0)]
+    [string]$arguments,
+    [Parameter(Position=1)]
+    [int[]]$validExitcodes = @(0),
+    [switch]$ForceUseBuildInVersion
+    )
+    $chocoExe = Get-ChocolateyInstance -ForceUseBuildInVersion:$ForceUseBuildInVersion
+
+    Invoke-Executeable -executablePath $chocoExe -arguments $arguments
+
+}
 
 function Invoke-ChocoPack {
     param(
@@ -59,12 +75,9 @@ function Invoke-ChocoPack {
         [switch]$UseBuildinChoco
     )
 
-    $chocoExe = Get-ChocolateyInstance -ForceUseBuildInVersion:$UseBuildinChoco
-
-    $chocoPath = $chocoExe.Source
     try
     {
-        & $chocoPath "pack" "$NuSpecFilePath" "--outputdirectory" $OutputFolderPath
+        Invoke-Chocolatey -arguments "pack $NuSpecFilePath  --outputdirectory  `"$OutputFolderPath`"" -ForceUseBuildInVersion:$UseBuildinChoco
     }
     Catch
     {
@@ -72,3 +85,19 @@ function Invoke-ChocoPack {
     }
 }
 
+function Publish-ChocoPackage {
+    [CmdletBinding()]
+    param (
+        $PackagePath,
+        $Source,
+        $ApiKey,
+        [switch]$Force,
+        [switch]$UseBuildinChoco
+        
+    )
+    
+    $argumentString = "push $PackagePath --source $Source"
+    if($ApiKey){$argumentString += " --api-key $ApiKey"}
+    if($Force){$argumentString += " --force"}
+    Invoke-Chocolatey -arguments $argumentString -ForceUseBuildInVersion:$UseBuildinChoco
+}
