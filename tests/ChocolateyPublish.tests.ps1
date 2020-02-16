@@ -18,5 +18,9 @@ Describe "Chocolatey Publish functions" {
         Test-Path "$source\$packagename"
     }
 
+    it "Choco publish to none-existing source should throw" {
+      { Publish-Chocopackage -PackagePath "$OutDirPath\$packagename" -Source "\\fakechocosource" } |
+        Should throw    
+    }
     #TODO add test with http(s) nuget/chocolatey stream/server
 }
